@@ -13,10 +13,9 @@ import com.sharafutdinov.aircraft_maintenance.request.PerformedWorkRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,6 +70,31 @@ public class PerformedWorkServiceImpl implements PerformedWorkService {
 
         return performedWorksList
                 .stream()
+                .map(performedWorkDTOMapper)
+                .toList();
+    }
+
+    @Override
+    public List<PerformedWorkDTO> getAllPerformedWorksByEngineerIdAndTime(Long engineerId, LocalDate date) {
+        List<PerformedWork> performedWorksList = Optional.ofNullable(performedWorkRepository.findByEngineerId(engineerId))
+                .orElseThrow(() -> new ResourceNotFoundException("У этого инженера еще нет записей"));
+
+        return performedWorksList
+                .stream()
+                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date) || r.getCompletionDate().toLocalDate().isBefore(date))
+                .map(performedWorkDTOMapper)
+                .toList();
+    }
+
+    @Override
+    public List<PerformedWorkDTO> getAllPerformedWorksByEngineerIdAndTime(Long engineerId, LocalDate date1, LocalDate date2) {
+        List<PerformedWork> performedWorksList = Optional.ofNullable(performedWorkRepository.findByEngineerId(engineerId))
+                .orElseThrow(() -> new ResourceNotFoundException("У этого инженера еще нет записей"));
+
+        return performedWorksList
+                .stream()
+                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date2) || r.getCompletionDate().toLocalDate().isBefore(date2)
+                        || r.getCompletionDate().toLocalDate().isEqual(date1) || r.getCompletionDate().toLocalDate().isAfter(date1))
                 .map(performedWorkDTOMapper)
                 .toList();
     }
