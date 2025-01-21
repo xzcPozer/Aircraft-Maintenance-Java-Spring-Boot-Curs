@@ -3,10 +3,12 @@ package com.sharafutdinov.aircraft_maintenance.service.airplane;
 import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTOMapper;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
+import com.sharafutdinov.aircraft_maintenance.model.Airplane;
 import com.sharafutdinov.aircraft_maintenance.repository.AirplaneRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +28,12 @@ public class AirplaneServiceImpl implements AirplaneService {
         return Optional.ofNullable(airplaneRepository.findBySerialNumber(serialNumber))
                 .map(airplaneDTOMapper)
                 .orElseThrow(() -> new ResourceNotFoundException("Самолет не был найден"));
+    }
+
+    @Override
+    public List<AirplaneDTO> findAllAirplanes() {
+        return airplaneRepository.findAll().stream()
+                .map(airplaneDTOMapper)
+                .toList();
     }
 }

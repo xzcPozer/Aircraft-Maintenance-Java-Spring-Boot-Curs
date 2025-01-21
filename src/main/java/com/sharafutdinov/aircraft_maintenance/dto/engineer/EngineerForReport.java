@@ -2,9 +2,14 @@ package com.sharafutdinov.aircraft_maintenance.dto.engineer;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -15,18 +20,27 @@ public class EngineerForReport{
     private String period;
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    public EngineerForReport(EngineerDTO engineerDTO, LocalDate date1) {
-        this.lastname = engineerDTO.getLastName();
-        this.name = engineerDTO.getFirstName();
-        this.position = engineerDTO.getPosition();
+    public EngineerForReport(JwtAuthenticationToken connectedEngineer, LocalDate date1) {
+        this.lastname = connectedEngineer.getToken().getClaimAsString("family_name");
+        this.name = connectedEngineer.getToken().getClaimAsString("given_name");
+        this.position = getRole(connectedEngineer);
         this.period = date1.format(formatter);
     }
 
-    public EngineerForReport(EngineerDTO engineerDTO, LocalDate date1, LocalDate date2) {
-        this.lastname = engineerDTO.getLastName();
-        this.name = engineerDTO.getFirstName();
-        this.position = engineerDTO.getPosition();
+    public EngineerForReport(JwtAuthenticationToken connectedEngineer, LocalDate date1, LocalDate date2) {
+        this.lastname = connectedEngineer.getToken().getClaimAsString("family_name");
+        this.name = connectedEngineer.getToken().getClaimAsString("given_name");
+        this.position = getRole(connectedEngineer);
         this.period = date1.format(formatter) +" - "+date2.format(formatter);
+    }
+
+    private String getRole(JwtAuthenticationToken jwt){
+        Collection<? extends GrantedAuthority> authorities = jwt.getAuthorities();
+        return authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(a -> a.equals("ROLE_ENGINEER") || a.equals("ROLE_SENIOR_ENGINEER"))
+                .findFirst()
+                .orElse(null);
     }
 
 }

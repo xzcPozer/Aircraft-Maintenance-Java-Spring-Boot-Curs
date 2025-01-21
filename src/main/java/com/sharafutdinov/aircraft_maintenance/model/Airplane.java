@@ -15,8 +15,11 @@ public class Airplane {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, nullable = false)
     private String serialNumber;
+    @Column(nullable = false)
     private String model;
+    @Column(nullable = false)
     private LocalDate yearOfRelease;
 
     @OneToMany(mappedBy = "airplane", cascade = CascadeType.ALL, orphanRemoval = true)

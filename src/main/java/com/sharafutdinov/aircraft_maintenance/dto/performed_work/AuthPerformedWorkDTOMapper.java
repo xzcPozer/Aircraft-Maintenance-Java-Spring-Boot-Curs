@@ -8,12 +8,12 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-public class PerformedWorkDTOMapper implements Function<PerformedWork, PerformedWorkDTO> {
+public class AuthPerformedWorkDTOMapper implements Function<PerformedWork, AuthPerformedWorkDTO> {
 
     @Override
-    public PerformedWorkDTO apply(PerformedWork performedWork) {
-        PerformedWorkDTO dto = new PerformedWorkDTO();
-        dto.setWorkName(performedWork.getWorkName());
+    public AuthPerformedWorkDTO apply(PerformedWork performedWork) {
+        AuthPerformedWorkDTO dto = new AuthPerformedWorkDTO();
+        dto.setWorkName(performedWork.getAircraftCheck().getCheckName());
         dto.setDescription(performedWork.getDescription());
         dto.setCompletionDate(Date.from(performedWork.getCompletionDate().atZone(ZoneId.systemDefault()).toInstant()));
         dto.setResult(performedWork.getResult().name());

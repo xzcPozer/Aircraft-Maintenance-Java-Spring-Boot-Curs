@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Запланированная работа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+        }
+        p {
+            color: #555555;
+        }
+        .details {
+            margin-top: 20px;
+        }
+        .details label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .details span {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Изменение времени запланированной работы</h1>
+    <p>Уважаемый инженер,</p>
+    <p>Время запланированной работы для самолета с серийным номером $<span th:text="${serialNumber}"></span> было изменено.</p>
+    <div class="details">
+        <label>Тип проверки:</label>
+        <span th:text="${type}"></span>
+        <label>Дата и время:</label>
+        <span th:text="${#temporals.format(date, 'dd.MM.yyyy HH:mm')}"></span>
+        <label>Статус:</label>
+        <span th:text="${status}"></span>
+    </div>
+    <p>Пожалуйста, выполните все необходимые действия в указанное время.</p>
+    <div class="footer">
+        <p>С уважением,</p>
+        <p>Отдел технического обслуживания</p>
+    </div>
+</div>
+</body>
+</html>
