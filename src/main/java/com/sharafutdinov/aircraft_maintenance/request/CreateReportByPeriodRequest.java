@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+// todo: сделать валидацию и необязательные поля
 @Data
 public class CreateReportRequest {
     private String reportFormat;
