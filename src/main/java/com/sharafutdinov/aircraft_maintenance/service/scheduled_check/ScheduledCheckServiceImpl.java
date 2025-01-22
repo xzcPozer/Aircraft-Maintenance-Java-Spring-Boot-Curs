@@ -25,8 +25,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -124,5 +126,22 @@ public class ScheduledCheckServiceImpl implements ScheduledCheckService {
         );
     }
 
+    @Override
+    public PageResponse<ScheduledCheckDTO> getAllScheduledChecksByDate(int page, int size, Date date) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ScheduledCheck> scheduledChecks = scheduledCheckRepository.findAllByDate(pageable, date);
+        List<ScheduledCheckDTO> scheduledChecksResponse = scheduledChecks.stream()
+                .map(scheduledCheckDTOMapper)
+                .toList();
 
+        return new PageResponse<>(
+                scheduledChecksResponse,
+                scheduledChecks.getNumber(),
+                scheduledChecks.getSize(),
+                scheduledChecks.getTotalElements(),
+                scheduledChecks.getTotalPages(),
+                scheduledChecks.isFirst(),
+                scheduledChecks.isLast()
+        );
+    }
 }

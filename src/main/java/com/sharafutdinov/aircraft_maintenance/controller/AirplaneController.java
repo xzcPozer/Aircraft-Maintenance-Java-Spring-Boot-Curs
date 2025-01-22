@@ -4,6 +4,7 @@ import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTO;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
 import com.sharafutdinov.aircraft_maintenance.model.Airplane;
 import com.sharafutdinov.aircraft_maintenance.response.ApiResponse;
+import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import com.sharafutdinov.aircraft_maintenance.service.airplane.AirplaneService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,11 @@ public class AirplaneController {
     private final AirplaneService airplaneService;
 
     @GetMapping
-    public ResponseEntity<List<AirplaneDTO>> getAllAirplanes() {
-        List<AirplaneDTO> airplanes = airplaneService.findAllAirplanes();
+    public ResponseEntity<PageResponse<AirplaneDTO>> getAllAirplanes(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+        PageResponse<AirplaneDTO> airplanes = airplaneService.findAllAirplanes(page, size);
         return ResponseEntity.ok(airplanes);
     }
 

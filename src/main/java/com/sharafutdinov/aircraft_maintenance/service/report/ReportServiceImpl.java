@@ -6,30 +6,48 @@ import com.sharafutdinov.aircraft_maintenance.exceptions.GenerateException;
 import com.sharafutdinov.aircraft_maintenance.request.CreateReportByPeriodAndSerialNumberRequest;
 import com.sharafutdinov.aircraft_maintenance.request.CreateReportByPeriodRequest;
 import com.sharafutdinov.aircraft_maintenance.service.performed_work.PerformedWorkService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ReportServiceImpl implements ReportService {
 
     private final PerformedWorkService performedWorkService;
 
-    private static final String path = "classpath:\\report";
+    //private static final String jasperFilePath = "D:\\Java Spring\\aircraft_maintenance\\src\\main\\resources\\report\\EngineerPerformedWorks.jrxml";
+    private static String jasperFilePath;
 
-    // todo: поменять на путь из проекта
-    private static final String jasperFilePath = "D:\\Java Spring\\aircraft_maintenance\\src\\main\\resources\\report\\EngineerPerformedWorks.jrxml";
-    private static final String jasperOutPath = "D:\\Java Spring\\aircraft_maintenance\\report\\";
+    @PostConstruct
+    public void init() {
+        try {
+            jasperFilePath = new ClassPathResource("report/EngineerPerformedWorks.jrxml").getFile().getAbsolutePath();
+        } catch (IOException e) {
+            log.error("Не удалось загрузить файл Jasper", e);
+        }
+    }
+
+
+    //private String jasperOutPath = "";
 
     @Override
-    public String exportReportByPeriod(CreateReportByPeriodRequest request, JwtAuthenticationToken authentication) throws JRException {
+    public byte[] exportReportByPeriod(CreateReportByPeriodRequest request, JwtAuthenticationToken authentication) throws JRException {
+
+        //jasperOutPath = request.getSavePath() + "\\";
 
         var jwt = authentication.getToken();
 
@@ -58,7 +76,6 @@ public class ReportServiceImpl implements ReportService {
         List<EngineerForReport> engineerForReportList = List.of(engineerForReport);
 
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperFilePath);
-        ;
 
         JRBeanCollectionDataSource tableDataSource = new JRBeanCollectionDataSource(performedWorks);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(engineerForReportList);
@@ -68,18 +85,21 @@ public class ReportServiceImpl implements ReportService {
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (request.getReportFormat().equals("xml")) {
-            JasperExportManager.exportReportToXmlFile(jasperPrint, jasperOutPath + "performed-works.xml", false);
+            JasperExportManager.exportReportToXmlStream(jasperPrint, baos);
         }
         if (request.getReportFormat().equals("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint, jasperOutPath + "performed-works.pdf");
+            JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
         }
 
-        return "report generated in path : " + path;
+        return baos.toByteArray();
     }
 
     @Override
-    public String exportReportByPeriodAndSerialNumber(CreateReportByPeriodAndSerialNumberRequest request, JwtAuthenticationToken authentication) throws JRException {
+    public byte[] exportReportByPeriodAndSerialNumber(CreateReportByPeriodAndSerialNumberRequest request, JwtAuthenticationToken authentication) throws JRException {
+        //jasperOutPath = request.getSavePath() + "\\";
+
         var jwt = authentication.getToken();
 
         // проверка на ввод даты
@@ -106,7 +126,6 @@ public class ReportServiceImpl implements ReportService {
         List<EngineerForReport> engineerForReportList = List.of(engineerForReport);
 
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperFilePath);
-        ;
 
         JRBeanCollectionDataSource tableDataSource = new JRBeanCollectionDataSource(performedWorks);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(engineerForReportList);
@@ -116,13 +135,14 @@ public class ReportServiceImpl implements ReportService {
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (request.getReportFormat().equals("xml")) {
-            JasperExportManager.exportReportToXmlFile(jasperPrint, jasperOutPath + "performed-works.xml", false);
+            JasperExportManager.exportReportToXmlStream(jasperPrint, baos);
         }
         if (request.getReportFormat().equals("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint, jasperOutPath + "performed-works2.pdf");
+            JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
         }
 
-        return "report generated in path : " + path;
+        return baos.toByteArray();
     }
 }

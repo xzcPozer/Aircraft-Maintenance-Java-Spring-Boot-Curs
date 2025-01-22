@@ -6,6 +6,6 @@ import net.sf.jasperreports.engine.JRException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 public interface ReportService {
-    String exportReportByPeriod(CreateReportByPeriodRequest request, JwtAuthenticationToken authentication) throws JRException;
-    String exportReportByPeriodAndSerialNumber(CreateReportByPeriodAndSerialNumberRequest request, JwtAuthenticationToken authentication) throws JRException;
+    byte[] exportReportByPeriod(CreateReportByPeriodRequest request, JwtAuthenticationToken authentication) throws JRException;
+    byte[] exportReportByPeriodAndSerialNumber(CreateReportByPeriodAndSerialNumberRequest request, JwtAuthenticationToken authentication) throws JRException;
 }

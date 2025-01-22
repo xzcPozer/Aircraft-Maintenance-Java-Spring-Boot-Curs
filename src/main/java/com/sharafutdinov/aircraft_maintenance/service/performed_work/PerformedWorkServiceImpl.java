@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +108,26 @@ public class PerformedWorkServiceImpl implements PerformedWorkService {
                 .orElseThrow(() -> new ResourceNotFoundException("У вас нет такой работы в БД"));
 
         return authPerformedWorkDTOMapper.apply(pw);
+    }
+
+    @Override
+    public PageResponse<AuthPerformedWorkDTO> getAllPerformedWorksByEngineerIdAndPeriod(int page, int size, String engineerId, Date date) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("completionDate").descending());
+        Page<PerformedWork> performedWorks = Optional.ofNullable(performedWorkRepository.findByEngineerIdAndCompletionDate(pageable, engineerId, date))
+                .orElseThrow(() -> new ResourceNotFoundException("Нет записей на эту дату"));
+        List<AuthPerformedWorkDTO> performedWorkResponse = performedWorks.stream()
+                .map(authPerformedWorkDTOMapper)
+                .toList();
+
+        return new PageResponse<>(
+                performedWorkResponse,
+                performedWorks.getNumber(),
+                performedWorks.getSize(),
+                performedWorks.getTotalElements(),
+                performedWorks.getTotalPages(),
+                performedWorks.isFirst(),
+                performedWorks.isLast()
+        );
     }
 
     @Override

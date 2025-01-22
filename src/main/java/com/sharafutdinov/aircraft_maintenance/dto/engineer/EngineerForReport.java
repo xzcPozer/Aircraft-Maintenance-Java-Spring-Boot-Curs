@@ -24,6 +24,8 @@ public class EngineerForReport{
         this.lastname = connectedEngineer.getToken().getClaimAsString("family_name");
         this.name = connectedEngineer.getToken().getClaimAsString("given_name");
         this.position = getRole(connectedEngineer);
+        if(this.position != null)
+            this.position = this.position.substring(5);
         this.period = date1.format(formatter);
     }
 
@@ -31,6 +33,8 @@ public class EngineerForReport{
         this.lastname = connectedEngineer.getToken().getClaimAsString("family_name");
         this.name = connectedEngineer.getToken().getClaimAsString("given_name");
         this.position = getRole(connectedEngineer);
+        if(this.position != null)
+            this.position = this.position.substring(5);
         this.period = date1.format(formatter) +" - "+date2.format(formatter);
     }
 

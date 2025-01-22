@@ -6,6 +6,7 @@ import com.sharafutdinov.aircraft_maintenance.request.PerformedWorkRequest;
 import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface PerformedWorkService {
@@ -18,4 +19,5 @@ public interface PerformedWorkService {
     List<AuthPerformedWorkDTO> getAllPerformedWorksBySerialNumberAndTime(String serialNumber, LocalDate date1, LocalDate date2);
     PageResponse<PerformedWorkDTO> getAllPerformedWorks(int page, int size);
     AuthPerformedWorkDTO getWorkByIdAndEngineer(Long performedWorkId, String engineerId);
+    PageResponse<AuthPerformedWorkDTO> getAllPerformedWorksByEngineerIdAndPeriod(int page, int size, String engineerId, Date date);
 }

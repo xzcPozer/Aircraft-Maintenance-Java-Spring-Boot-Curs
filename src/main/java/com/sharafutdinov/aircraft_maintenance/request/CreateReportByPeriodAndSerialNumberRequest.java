@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 @Data
@@ -22,4 +24,14 @@ public class CreateReportByPeriodAndSerialNumberRequest {
 
     @Nullable
     private LocalDate date2;
+
+    @Nullable
+    private String savePath;
+
+    public CreateReportByPeriodAndSerialNumberRequest(){
+        String userHome = System.getProperty("user.home");
+        String desktopFolderName = "Desktop";
+        Path desktopPath = Paths.get(userHome, desktopFolderName);
+        this.savePath = desktopPath.toString();
+    }
 }

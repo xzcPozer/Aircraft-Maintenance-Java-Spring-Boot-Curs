@@ -2,10 +2,17 @@ package com.sharafutdinov.aircraft_maintenance.service.airplane;
 
 import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTOMapper;
+import com.sharafutdinov.aircraft_maintenance.dto.performed_work.PerformedWorkDTO;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
 import com.sharafutdinov.aircraft_maintenance.model.Airplane;
+import com.sharafutdinov.aircraft_maintenance.model.PerformedWork;
 import com.sharafutdinov.aircraft_maintenance.repository.AirplaneRepository;
+import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,9 +38,21 @@ public class AirplaneServiceImpl implements AirplaneService {
     }
 
     @Override
-    public List<AirplaneDTO> findAllAirplanes() {
-        return airplaneRepository.findAll().stream()
+    public PageResponse<AirplaneDTO> findAllAirplanes(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Airplane> airplanes = airplaneRepository.findAll(pageable);
+        List<AirplaneDTO> airplanesDto = airplanes.stream()
                 .map(airplaneDTOMapper)
                 .toList();
+
+        return new PageResponse<>(
+                airplanesDto,
+                airplanes.getNumber(),
+                airplanes.getSize(),
+                airplanes.getTotalElements(),
+                airplanes.getTotalPages(),
+                airplanes.isFirst(),
+                airplanes.isLast()
+        );
     }
 }

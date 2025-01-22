@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -23,6 +24,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,12 +40,24 @@ public class ScheduledCheckController {
     private final ScheduledCheckService scheduledCheckService;
 
     @GetMapping("/all-scheduled-check")
-    @PreAuthorize("hasRole('ROLE_SENIOR_ENGINEER')")
+    @PreAuthorize("hasRole('ROLE_ENGINEER')")
     public ResponseEntity<PageResponse<ScheduledCheckDTO>> getAllScheduledWorks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size
     ) {
         PageResponse<ScheduledCheckDTO> scheduledChecks = scheduledCheckService.getAllScheduledChecks(page, size);
+        return ResponseEntity.ok(scheduledChecks);
+    }
+
+
+    @GetMapping("/all-scheduled-check/by/date")
+    @PreAuthorize("hasRole('ROLE_ENGINEER')")
+    public ResponseEntity<PageResponse<ScheduledCheckDTO>> getAllScheduledWorkByDate(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
+    ) {
+        PageResponse<ScheduledCheckDTO> scheduledChecks = scheduledCheckService.getAllScheduledChecksByDate(page, size, date);
         return ResponseEntity.ok(scheduledChecks);
     }
 
@@ -53,6 +68,7 @@ public class ScheduledCheckController {
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication authentication) {
         String engineerId = authentication.getName();
+
         PageResponse<ScheduledCheckDTO> scheduledChecks = scheduledCheckService.getAllScheduledCheckByEngineerId(page, size, engineerId);
         return ResponseEntity.ok(scheduledChecks);
     }

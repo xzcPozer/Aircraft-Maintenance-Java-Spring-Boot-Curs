@@ -3,6 +3,7 @@ package com.sharafutdinov.aircraft_maintenance.request;
 import com.sharafutdinov.aircraft_maintenance.enums.WorkResult;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
@@ -14,6 +15,7 @@ public class PerformedWorkRequest {
     @NotNull(message = "заполните название")
     private String workName;
 
+    @Size(max = 140, message = "поле должно быть не больше 140 символов")
     @Nullable
     private String description;
 

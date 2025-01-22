@@ -10,15 +10,22 @@ import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import com.sharafutdinov.aircraft_maintenance.service.performed_work.PerformedWorkService;
 import com.sharafutdinov.aircraft_maintenance.service.report.ReportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.InputStreamResource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayInputStream;
+import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +56,19 @@ public class PerformedWorkController {
         return ResponseEntity.ok(performedWorks);
     }
 
+    @GetMapping("/my-performed-work/by/period")
+    @PreAuthorize("hasRole('ROLE_ENGINEER')")
+    public ResponseEntity<PageResponse<AuthPerformedWorkDTO>> getAllPerformedWorksByEngineerAuthIdAndDate(
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date,
+            Authentication authentication) {
+        String engineerId = authentication.getName();
+
+        PageResponse<AuthPerformedWorkDTO> performedWorks = performedWorkService.getAllPerformedWorksByEngineerIdAndPeriod(page, size, engineerId, date);
+        return ResponseEntity.ok(performedWorks);
+    }
+
     @GetMapping("/my-performed-work/{performedWorkId}")
     @PreAuthorize("hasRole('ROLE_ENGINEER')")
     public ResponseEntity<ApiResponse> getWorkByIdAndByEngineerAuthId(
@@ -73,20 +93,40 @@ public class PerformedWorkController {
 
     @PostMapping("/create-report/by/period")
     @PreAuthorize("hasRole('ROLE_ENGINEER')")
-    public ResponseEntity<ApiResponse> createReportByPeriod(
+    public ResponseEntity<InputStreamResource> createReportByPeriod(
             @RequestBody @Valid CreateReportByPeriodRequest request,
             JwtAuthenticationToken authentication) throws JRException {
-        String reportInfo = reportService.exportReportByPeriod(request, authentication);
-        return ResponseEntity.ok(new ApiResponse("Успешно", reportInfo));
+        byte[] reportInfo = reportService.exportReportByPeriod(request, authentication);
+
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(reportInfo));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=engineer-performed-works.pdf");
+
+        // Возврат ответа с файлом
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 
     @PostMapping("/create-report/by/period-and-serial-number")
     @PreAuthorize("hasRole('ROLE_SENIOR_ENGINEER')")
-    public ResponseEntity<ApiResponse> createReportByPeriodAndSerialNumber(
+    public ResponseEntity<InputStreamResource> createReportByPeriodAndSerialNumber(
             @RequestBody @Valid CreateReportByPeriodAndSerialNumberRequest request,
             JwtAuthenticationToken authentication) throws JRException {
-        String reportInfo = reportService.exportReportByPeriodAndSerialNumber(request, authentication);
-        return ResponseEntity.ok(new ApiResponse("Успешно", reportInfo));
+        byte[] reportInfo = reportService.exportReportByPeriodAndSerialNumber(request, authentication);
+
+        InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(reportInfo));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=senior-engineer-performed-works.pdf");
+
+        // Возврат ответа с файлом
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 
     @PutMapping("/my-performed-work/change/{performedWorkId}")
