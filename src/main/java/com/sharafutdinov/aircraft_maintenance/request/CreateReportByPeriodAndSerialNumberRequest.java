@@ -24,14 +24,4 @@ public class CreateReportByPeriodAndSerialNumberRequest {
 
     @Nullable
     private LocalDate date2;
-
-    @Nullable
-    private String savePath;
-
-    public CreateReportByPeriodAndSerialNumberRequest(){
-        String userHome = System.getProperty("user.home");
-        String desktopFolderName = "Desktop";
-        Path desktopPath = Paths.get(userHome, desktopFolderName);
-        this.savePath = desktopPath.toString();
-    }
 }
