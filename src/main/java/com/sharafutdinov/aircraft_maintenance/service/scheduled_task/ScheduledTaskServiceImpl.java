@@ -106,7 +106,9 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
         List<UserRepresentation> engineers = keycloakService.getUserRepresentation(usersKeycloak);
 
         for (UserRepresentation engineer : engineers) {
-            ScheduledCheckDTO dto = new ScheduledCheckDTO(scheduledCheck.getType(),
+            ScheduledCheckDTO dto = new ScheduledCheckDTO(
+                    scheduledCheck.getId(),
+                    scheduledCheck.getType(),
                     scheduledCheck.getDate(),
                     scheduledCheck.getStatus(),
                     scheduledCheck.getAirplane().getSerialNumber());
