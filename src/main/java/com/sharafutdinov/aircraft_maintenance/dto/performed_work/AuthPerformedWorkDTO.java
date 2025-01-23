@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class AuthPerformedWorkDTO {
+    private Long id;
     private String workName;
     private String description;
     private Date completionDate;

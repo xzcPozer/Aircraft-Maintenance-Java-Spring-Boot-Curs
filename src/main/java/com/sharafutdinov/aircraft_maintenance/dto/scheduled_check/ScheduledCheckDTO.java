@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduledCheckDTO {
+    private Long id;
     private CheckType type;
     private LocalDateTime date;
     private CheckStatus status;

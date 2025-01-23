@@ -10,6 +10,7 @@ public class ScheduledCheckDTOMapper implements Function<ScheduledCheck, Schedul
     @Override
     public ScheduledCheckDTO apply(ScheduledCheck scheduledCheck) {
         ScheduledCheckDTO dto = new ScheduledCheckDTO();
+        dto.setId(scheduledCheck.getId());
         dto.setType(scheduledCheck.getType());
         dto.setDate(scheduledCheck.getDate());
         dto.setStatus(scheduledCheck.getStatus());

@@ -13,6 +13,7 @@ public class AuthPerformedWorkDTOMapper implements Function<PerformedWork, AuthP
     @Override
     public AuthPerformedWorkDTO apply(PerformedWork performedWork) {
         AuthPerformedWorkDTO dto = new AuthPerformedWorkDTO();
+        dto.setId(performedWork.getId());
         dto.setWorkName(performedWork.getAircraftCheck().getCheckName());
         dto.setDescription(performedWork.getDescription());
         dto.setCompletionDate(Date.from(performedWork.getCompletionDate().atZone(ZoneId.systemDefault()).toInstant()));
