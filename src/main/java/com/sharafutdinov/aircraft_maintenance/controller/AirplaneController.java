@@ -22,6 +22,11 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class AirplaneController {
     private final AirplaneService airplaneService;
 
+    @GetMapping("/serial-numbers")
+    public ResponseEntity<List<String>> getAllAirplanesSerialNumber(){
+        return ResponseEntity.ok(airplaneService.findAllSerialNumbers());
+    }
+
     @GetMapping
     public ResponseEntity<PageResponse<AirplaneDTO>> getAllAirplanes(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,

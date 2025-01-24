@@ -12,4 +12,5 @@ public interface AirplaneService {
     AirplaneDTO getAirplaneById(Long id);
     AirplaneDTO getAirplaneBySerialNumber(String serialNumber);
     PageResponse<AirplaneDTO> findAllAirplanes(int page, int size);
+    List<String> findAllSerialNumbers();
 }

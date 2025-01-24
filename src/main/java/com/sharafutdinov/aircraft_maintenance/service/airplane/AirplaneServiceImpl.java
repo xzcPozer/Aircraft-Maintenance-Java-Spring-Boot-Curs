@@ -17,12 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AirplaneServiceImpl implements AirplaneService {
     private final AirplaneRepository airplaneRepository;
     private final AirplaneDTOMapper airplaneDTOMapper;
+
     @Override
     public AirplaneDTO getAirplaneById(Long id) {
         return airplaneRepository.findById(id)
@@ -54,5 +56,17 @@ public class AirplaneServiceImpl implements AirplaneService {
                 airplanes.isFirst(),
                 airplanes.isLast()
         );
+    }
+
+    @Override
+    public List<String> findAllSerialNumbers() {
+        List<Airplane> airplane = airplaneRepository.findAll();
+
+        if (!airplane.isEmpty()) {
+            return airplane.stream()
+                    .map(Airplane::getSerialNumber)
+                    .collect(Collectors.toList());
+        }
+        throw new ResourceNotFoundException("нет ни одного самолета в бд");
     }
 }
