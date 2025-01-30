@@ -6,7 +6,7 @@ import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundExcepti
 import jakarta.mail.MessagingException;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authorization.AuthorizationDeniedException;
+//import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -86,16 +86,16 @@ public class GlobalExceptionHandler {
                 );
     }
 
-    @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(AuthorizationDeniedException exp) {
-        return ResponseEntity
-                .status(CONFLICT)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
-    }
+//    @ExceptionHandler(AuthorizationDeniedException.class)
+//    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(AuthorizationDeniedException exp) {
+//        return ResponseEntity
+//                .status(CONFLICT)
+//                .body(
+//                        ExceptionResponse.builder()
+//                                .error(exp.getMessage())
+//                                .build()
+//                );
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {

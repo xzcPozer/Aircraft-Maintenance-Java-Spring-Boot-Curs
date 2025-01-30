@@ -35,7 +35,6 @@ public class ScheduledCheck extends AuditEntity {
     @JoinColumn(name = "airplane_id", nullable = false)
     private Airplane airplane;
 
-    //@ManyToOne
     @JoinColumn(name = "engineer_id", nullable = false)
     private String engineerId;
 }
