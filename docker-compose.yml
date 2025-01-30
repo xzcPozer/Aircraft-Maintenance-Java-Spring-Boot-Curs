@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: timur
       POSTGRES_PASSWORD: timur
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: keycloak
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -29,10 +29,25 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-    networks:
-      - aircraft-net
+      KC_HTTP_ENABLED: true
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: 5432
+      KC_DB_USERNAME: timur
+      KC_DB_PASSWORD: timur
+      KC_DB_SCHEMA: public
+      KC_FEATURES: preview
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
+    volumes:
+      - ./src/main/resources/keycloak/import:/opt/keycloak/data/import
+      - ./src/main/resources/keycloak/themes:/opt/keycloak/themes/mytheme
     command:
-      - "start-dev"
+     -v start-dev --import-realm
+    depends_on:
+     - postgres
+    networks:
+     - aircraft-net
 
 networks:
   aircraft-net:

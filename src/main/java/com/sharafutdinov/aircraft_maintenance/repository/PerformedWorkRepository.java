@@ -1,14 +1,11 @@
 package com.sharafutdinov.aircraft_maintenance.repository;
 
-import com.sharafutdinov.aircraft_maintenance.dto.performed_work.AuthPerformedWorkDTO;
-import com.sharafutdinov.aircraft_maintenance.dto.performed_work.PerformedWorkDTO;
 import com.sharafutdinov.aircraft_maintenance.model.PerformedWork;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 

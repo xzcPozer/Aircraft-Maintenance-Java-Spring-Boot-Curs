@@ -1,9 +1,6 @@
 package com.sharafutdinov.aircraft_maintenance.controller;
 
 import com.sharafutdinov.aircraft_maintenance.dto.airplane.AirplaneDTO;
-import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
-import com.sharafutdinov.aircraft_maintenance.model.Airplane;
-import com.sharafutdinov.aircraft_maintenance.response.ApiResponse;
 import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import com.sharafutdinov.aircraft_maintenance.service.airplane.AirplaneService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
 @RequiredArgsConstructor

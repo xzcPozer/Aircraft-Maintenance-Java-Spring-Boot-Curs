@@ -2,11 +2,12 @@ package com.sharafutdinov.aircraft_maintenance.service.scheduled_task;
 
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.*;
-import org.keycloak.representations.idm.ClientRepresentation;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.RoleMappingResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
 
 @Service
 @RequiredArgsConstructor

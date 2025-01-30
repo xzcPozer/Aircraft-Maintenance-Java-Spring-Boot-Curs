@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,6 @@ public class ReportServiceImpl implements ReportService {
 
     private final PerformedWorkService performedWorkService;
 
-    //private static final String jasperFilePath = "D:\\Java Spring\\aircraft_maintenance\\src\\main\\resources\\report\\EngineerPerformedWorks.jrxml";
     private static String jasperFilePath;
 
     @PostConstruct
@@ -41,13 +39,8 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-
-    //private String jasperOutPath = "";
-
     @Override
     public byte[] exportReportByPeriod(CreateReportByPeriodRequest request, JwtAuthenticationToken authentication) throws JRException {
-
-        //jasperOutPath = request.getSavePath() + "\\";
 
         var jwt = authentication.getToken();
 
@@ -98,7 +91,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public byte[] exportReportByPeriodAndSerialNumber(CreateReportByPeriodAndSerialNumberRequest request, JwtAuthenticationToken authentication) throws JRException {
-        //jasperOutPath = request.getSavePath() + "\\";
 
         var jwt = authentication.getToken();
 

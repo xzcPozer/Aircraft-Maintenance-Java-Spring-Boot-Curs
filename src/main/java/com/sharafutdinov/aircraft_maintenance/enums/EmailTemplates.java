@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum EmailTemplates {
 
     SCHEDULED_TASK("ScheduledTask.html", "ЗАПЛАНИРОВАННАЯ РАБОТА"),
-    UPDATED_SCHEDULED_TASK("UpdatedScheduledTask.html", "ВРЕМЯ РАБОТЫ БЫЛО ИЗМЕНЕНО")
+    UPDATED_SCHEDULED_TASK("UpdatedScheduledTask.html", "ИЗМЕНЕНИЯ В ЗАПЛАНИРОВАННОЙ РАБОТЕ")
     ;
 
     private final String template;

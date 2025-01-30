@@ -1,9 +1,6 @@
 package com.sharafutdinov.aircraft_maintenance.controller;
 
-import com.sharafutdinov.aircraft_maintenance.dto.performed_work.AuthPerformedWorkDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.scheduled_check.ScheduledCheckDTO;
-import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceAlreadyFoundException;
-import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
 import com.sharafutdinov.aircraft_maintenance.request.AddScheduledCheckRequest;
 import com.sharafutdinov.aircraft_maintenance.request.UpdateScheduledCheckRequest;
 import com.sharafutdinov.aircraft_maintenance.response.ApiResponse;
@@ -15,21 +12,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,7 +36,6 @@ public class ScheduledCheckController {
         return ResponseEntity.ok(scheduledChecks);
     }
 
-
     @GetMapping("/all-scheduled-check/by/date")
     @PreAuthorize("hasRole('ROLE_ENGINEER')")
     public ResponseEntity<PageResponse<ScheduledCheckDTO>> getAllScheduledWorkByDate(
@@ -63,7 +49,7 @@ public class ScheduledCheckController {
 
     @GetMapping("/my-scheduled-check")
     @PreAuthorize("hasRole('ROLE_SENIOR_ENGINEER')")
-    public ResponseEntity<PageResponse<ScheduledCheckDTO>> getAllScheduledCheckByEngineerId(
+    public ResponseEntity<PageResponse<ScheduledCheckDTO>> getAllScheduledAllCheckByEngineerId(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication authentication) {

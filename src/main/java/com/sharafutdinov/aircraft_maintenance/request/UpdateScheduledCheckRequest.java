@@ -1,7 +1,6 @@
 package com.sharafutdinov.aircraft_maintenance.request;
 
 import com.sharafutdinov.aircraft_maintenance.enums.CheckStatus;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

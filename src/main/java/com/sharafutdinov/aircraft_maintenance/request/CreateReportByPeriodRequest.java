@@ -4,11 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.lang.Nullable;
-import java.awt.Desktop;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 
 @Data

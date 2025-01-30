@@ -5,7 +5,6 @@ import com.sharafutdinov.aircraft_maintenance.dto.performed_work.AuthPerformedWo
 import com.sharafutdinov.aircraft_maintenance.dto.performed_work.PerformedWorkDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.performed_work.PerformedWorkDTOMapper;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
-import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceAlreadyFoundException;
 import com.sharafutdinov.aircraft_maintenance.model.AircraftCheck;
 import com.sharafutdinov.aircraft_maintenance.model.Airplane;
 import com.sharafutdinov.aircraft_maintenance.model.PerformedWork;
@@ -14,9 +13,7 @@ import com.sharafutdinov.aircraft_maintenance.repository.AirplaneRepository;
 import com.sharafutdinov.aircraft_maintenance.repository.PerformedWorkRepository;
 import com.sharafutdinov.aircraft_maintenance.request.PerformedWorkRequest;
 import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -157,7 +152,7 @@ public class PerformedWorkServiceImpl implements PerformedWorkService {
 
         return performedWorksList
                 .stream()
-                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date) || r.getCompletionDate().toLocalDate().isBefore(date))
+                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date))
                 .map(authPerformedWorkDTOMapper)
                 .toList();
     }
@@ -182,7 +177,7 @@ public class PerformedWorkServiceImpl implements PerformedWorkService {
 
         return performedWorksList
                 .stream()
-                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date) || r.getCompletionDate().toLocalDate().isBefore(date))
+                .filter(r -> r.getCompletionDate().toLocalDate().isEqual(date))
                 .map(authPerformedWorkDTOMapper)
                 .toList();
     }

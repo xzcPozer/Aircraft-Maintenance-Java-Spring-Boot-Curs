@@ -6,16 +6,9 @@ import com.sharafutdinov.aircraft_maintenance.enums.CheckStatus;
 import com.sharafutdinov.aircraft_maintenance.model.ScheduledCheck;
 import com.sharafutdinov.aircraft_maintenance.repository.ScheduledCheckRepository;
 import com.sharafutdinov.aircraft_maintenance.request.SendEmailRequest;
-import com.sharafutdinov.aircraft_maintenance.service.email.EmailService;
 import com.sharafutdinov.aircraft_maintenance.service.notification.NotificationService;
-import jakarta.mail.MessagingException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.RoleResource;
-import org.keycloak.admin.client.resource.RolesResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -39,12 +30,8 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ScheduledCheckRepository scheduledCheckRepository;
     private final ScheduledCheckDTOMapper scheduledCheckDTOMapper;
-    private final Keycloak keycloakAdminClient;
     private final NotificationService notificationService;
     private final KeycloakService keycloakService;
-
-    @Value("${keycloak.realm}")
-    private String realm;
 
     @Value("${keycloak.clientMail}")
     private String seniorEngineerMail;
@@ -88,8 +75,8 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                         throw new RuntimeException("Failed to send notification", e);
                     }
                 }
-                // todo: не забыть раскомментировать для frontend
-                //simpMessagingTemplate.convertAndSendToUser(engineer.getId(), "/notifications", work);
+
+                simpMessagingTemplate.convertAndSendToUser(engineer.getId(), "/notifications", work);
             }
         }
     }
@@ -125,8 +112,8 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                     throw new RuntimeException("Failed to send notification", e);
                 }
             }
-            // todo: не забыть раскомментировать для frontend
-            //simpMessagingTemplate.convertAndSendToUser(engineer.getId(), "/notifications", dto);
+
+            simpMessagingTemplate.convertAndSendToUser(engineer.getId(), "/notifications", dto);
         }
 
     }

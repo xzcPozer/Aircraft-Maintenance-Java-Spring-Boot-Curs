@@ -1,18 +1,13 @@
 package com.sharafutdinov.aircraft_maintenance.service.scheduled_check;
 
-import com.sharafutdinov.aircraft_maintenance.dto.performed_work.AuthPerformedWorkDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.scheduled_check.ScheduledCheckDTO;
 import com.sharafutdinov.aircraft_maintenance.dto.scheduled_check.ScheduledCheckDTOMapper;
-import com.sharafutdinov.aircraft_maintenance.enums.CheckStatus;
-import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceAlreadyFoundException;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
 import com.sharafutdinov.aircraft_maintenance.model.Airplane;
-import com.sharafutdinov.aircraft_maintenance.model.PerformedWork;
 import com.sharafutdinov.aircraft_maintenance.model.ScheduledCheck;
 import com.sharafutdinov.aircraft_maintenance.repository.AirplaneRepository;
 import com.sharafutdinov.aircraft_maintenance.repository.ScheduledCheckRepository;
 import com.sharafutdinov.aircraft_maintenance.request.AddScheduledCheckRequest;
-import com.sharafutdinov.aircraft_maintenance.request.SendEmailRequest;
 import com.sharafutdinov.aircraft_maintenance.request.UpdateScheduledCheckRequest;
 import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import com.sharafutdinov.aircraft_maintenance.service.scheduled_task.ScheduledTaskService;
@@ -23,15 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +37,6 @@ public class ScheduledCheckServiceImpl implements ScheduledCheckService {
                 .orElseThrow(() -> new ResourceNotFoundException("Такого самолета нет в БД"));
 
         return Optional.of(scheduledCheckReq)
-                .filter(f -> !scheduledCheckRepository
-                        .existsByAirplane_SerialNumber(airplane.getSerialNumber()))
                 .map(req -> {
                     ScheduledCheck scheduledCheck = new ScheduledCheck();
                     scheduledCheck.setAirplane(airplane);
@@ -60,7 +48,7 @@ public class ScheduledCheckServiceImpl implements ScheduledCheckService {
                     return scheduledCheckRepository.save(scheduledCheck);
                 })
                 .map(scheduledCheckDTOMapper)
-                .orElseThrow(() -> new ResourceAlreadyFoundException("Этот самолет уже запланирован на проверку"));
+                .orElseThrow(() -> new ResourceNotFoundException("Такой проверки нет в бд"));
     }
 
     @Override

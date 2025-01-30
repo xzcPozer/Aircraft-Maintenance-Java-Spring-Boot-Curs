@@ -6,9 +6,7 @@ import com.sharafutdinov.aircraft_maintenance.request.UpdateScheduledCheckReques
 import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import jakarta.mail.MessagingException;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 public interface ScheduledCheckService {
     ScheduledCheckDTO addScheduledCheck(AddScheduledCheckRequest scheduledCheckReq, String engineerId);

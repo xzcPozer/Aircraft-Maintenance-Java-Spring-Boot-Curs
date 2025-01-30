@@ -3,11 +3,12 @@ package com.sharafutdinov.aircraft_maintenance.handler;
 import com.sharafutdinov.aircraft_maintenance.exceptions.GenerateException;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceAlreadyFoundException;
 import com.sharafutdinov.aircraft_maintenance.exceptions.ResourceNotFoundException;
+import jakarta.mail.MessagingException;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.ResponseEntity;
-import jakarta.mail.MessagingException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +19,17 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> handleException(MissingServletRequestParameterException exp) {
+        return ResponseEntity
+                .status(INTERNAL_SERVER_ERROR)
+                .body(
+                        ExceptionResponse.builder()
+                                .error("Выберите дату, чтобы найти нужные записи")
+                                .build()
+                );
+    }
 
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<ExceptionResponse> handleException(MessagingException exp) {

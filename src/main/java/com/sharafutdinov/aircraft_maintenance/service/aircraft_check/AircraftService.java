@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface AircraftService {
 
-    List<AircraftCheck> findAllAircraftCheck();
+    List<String> findAllAircraftCheck();
 }

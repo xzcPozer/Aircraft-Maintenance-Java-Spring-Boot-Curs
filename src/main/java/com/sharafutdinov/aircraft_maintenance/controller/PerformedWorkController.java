@@ -10,17 +10,16 @@ import com.sharafutdinov.aircraft_maintenance.response.PageResponse;
 import com.sharafutdinov.aircraft_maintenance.service.performed_work.PerformedWorkService;
 import com.sharafutdinov.aircraft_maintenance.service.report.ReportService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.core.io.InputStreamResource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,13 +70,13 @@ public class PerformedWorkController {
 
     @GetMapping("/my-performed-work/{performedWorkId}")
     @PreAuthorize("hasRole('ROLE_ENGINEER')")
-    public ResponseEntity<ApiResponse> getWorkByIdAndByEngineerAuthId(
+    public ResponseEntity<AuthPerformedWorkDTO> getWorkByIdAndByEngineerAuthId(
             @PathVariable Long performedWorkId,
             Authentication authentication){
         String engineerId = authentication.getName();
 
         AuthPerformedWorkDTO performedWork = performedWorkService.getWorkByIdAndEngineer(performedWorkId, engineerId);
-        return ResponseEntity.ok(new ApiResponse("Успешно", performedWork));
+        return ResponseEntity.ok(performedWork);
     }
 
     @PostMapping("/add")
@@ -96,17 +95,28 @@ public class PerformedWorkController {
     public ResponseEntity<InputStreamResource> createReportByPeriod(
             @RequestBody @Valid CreateReportByPeriodRequest request,
             JwtAuthenticationToken authentication) throws JRException {
+        MediaType mediaType;
+        String fileName;
+
+        if (request.getReportFormat().equals("xml")) {
+            mediaType = MediaType.APPLICATION_XML;
+            fileName = "engineer-performed-works.xml";
+        } else {
+            mediaType = MediaType.APPLICATION_PDF;
+            fileName = "engineer-performed-works.pdf";
+        }
+
         byte[] reportInfo = reportService.exportReportByPeriod(request, authentication);
 
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(reportInfo));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=engineer-performed-works.pdf");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
 
         // Возврат ответа с файлом
         return ResponseEntity.ok()
                 .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
+                .contentType(mediaType)
                 .body(resource);
     }
 
@@ -115,17 +125,28 @@ public class PerformedWorkController {
     public ResponseEntity<InputStreamResource> createReportByPeriodAndSerialNumber(
             @RequestBody @Valid CreateReportByPeriodAndSerialNumberRequest request,
             JwtAuthenticationToken authentication) throws JRException {
+        MediaType mediaType;
+        String fileName;
+
+        if (request.getReportFormat().equals("xml")) {
+            mediaType = MediaType.APPLICATION_XML;
+            fileName = "all-performed-works.xml";
+        } else {
+            mediaType = MediaType.APPLICATION_PDF;
+            fileName = "all-performed-works.pdf";
+        }
+
         byte[] reportInfo = reportService.exportReportByPeriodAndSerialNumber(request, authentication);
 
         InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(reportInfo));
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=senior-engineer-performed-works.pdf");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
 
         // Возврат ответа с файлом
         return ResponseEntity.ok()
                 .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
+                .contentType(mediaType)
                 .body(resource);
     }
 

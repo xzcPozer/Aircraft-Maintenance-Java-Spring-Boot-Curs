@@ -22,12 +22,6 @@ public class KeycloakConfig {
     @Value("${keycloak.credentials.secret}")
     private String clientSecret;
 
-//    @Value("${keycloak.username}")
-//    private String username;
-//
-//    @Value("${keycloak.password}")
-//    private String password;
-
     @Bean
     public Keycloak getKeycloakInstance() {
         return KeycloakBuilder.builder()

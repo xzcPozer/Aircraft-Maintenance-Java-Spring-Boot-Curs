@@ -1,15 +1,17 @@
 package com.sharafutdinov.aircraft_maintenance.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.MessageConverter;
-import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.security.web.reactive.result.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -31,7 +33,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
-        registry.addEndpoint("/main")
+        registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://localhost:4200")
                 .withSockJS();
     }
@@ -43,7 +45,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setObjectMapper(new ObjectMapper());
         converter.setContentTypeResolver(resolver);
+        converter.setObjectMapper(objectMapper());
+
         messageConverters.add(converter);
         return false;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
+        return mapper;
     }
 }

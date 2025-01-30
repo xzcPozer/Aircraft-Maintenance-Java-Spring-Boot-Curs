@@ -1,6 +1,5 @@
 package com.sharafutdinov.aircraft_maintenance.controller;
 
-import com.sharafutdinov.aircraft_maintenance.model.AircraftCheck;
 import com.sharafutdinov.aircraft_maintenance.service.aircraft_check.AircraftService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class AircraftCheckController {
     private final AircraftService service;
 
     @GetMapping
-    public ResponseEntity<List<AircraftCheck>> getAllChecks(){
+    public ResponseEntity<List<String>> getAllChecks(){
         return ResponseEntity.ok(service.findAllAircraftCheck());
     }
 }
