@@ -1,5 +1,6 @@
 package com.sharafutdinov.aircraft_maintenance.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -15,6 +16,9 @@ import java.util.List;
 @Configuration
 public class BeansConfig {
 
+    @Value("${application.cors.origins}")
+    private List<String> allowedOrigin;
+
     @Bean
     public AuditorAware<String> auditorAware() {
         return new ApplicationAuditAware();
@@ -25,7 +29,7 @@ public class BeansConfig {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080"));
+        config.setAllowedOrigins(allowedOrigin);
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.ORIGIN,
                 HttpHeaders.CONTENT_TYPE,

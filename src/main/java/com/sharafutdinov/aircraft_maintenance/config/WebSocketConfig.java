@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -24,6 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${application.cors.origins}")
+    private List<String> allowedOrigin;
+
     @Override
     public void configureMessageBroker(final MessageBrokerRegistry config) {
         config.enableSimpleBroker("/user");
@@ -34,7 +38,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:4200", "http://localhost:8080")
+                .setAllowedOrigins(String.valueOf(allowedOrigin))
                 .withSockJS();
     }
 
