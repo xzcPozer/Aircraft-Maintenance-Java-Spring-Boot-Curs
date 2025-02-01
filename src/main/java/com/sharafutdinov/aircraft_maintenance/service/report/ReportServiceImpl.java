@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,12 @@ public class ReportServiceImpl implements ReportService {
 
     private final PerformedWorkService performedWorkService;
 
-    private static String jasperFilePath;
+    private static InputStream jasperFilePath;
 
     @PostConstruct
     public void init() {
         try {
-            jasperFilePath = new ClassPathResource("report/EngineerPerformedWorks.jrxml").getFile().getAbsolutePath();
+            jasperFilePath = new ClassPathResource("report/EngineerPerformedWorks.jrxml").getInputStream();
         } catch (IOException e) {
             log.error("Не удалось загрузить файл Jasper", e);
         }
