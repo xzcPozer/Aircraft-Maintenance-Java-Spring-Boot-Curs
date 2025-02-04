@@ -15,7 +15,7 @@ CREATE TABLE airplane (
 -- Создание таблицы PerformedWork
 CREATE TABLE performed_work (
                                 id BIGSERIAL PRIMARY KEY,
-                                description TEXT NOT NULL,
+                                description TEXT,
                                 completion_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
                                 result VARCHAR(50) NOT NULL,
                                 aircraft_check_id BIGINT NOT NULL,

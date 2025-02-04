@@ -29,12 +29,12 @@ public class ReportServiceImpl implements ReportService {
 
     private final PerformedWorkService performedWorkService;
 
-    private static InputStream jasperFilePath;
+    private static String jasperFilePath;
 
     @PostConstruct
     public void init() {
         try {
-            jasperFilePath = new ClassPathResource("report/EngineerPerformedWorks.jrxml").getInputStream();
+            jasperFilePath = new ClassPathResource("report/EngineerPerformedWorks.jrxml").getFile().getAbsolutePath();
         } catch (IOException e) {
             log.error("Не удалось загрузить файл Jasper", e);
         }
